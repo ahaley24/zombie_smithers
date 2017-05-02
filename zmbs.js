@@ -30,14 +30,13 @@ const embed = new Discord.RichEmbed()
   //Alternatively, use '#00AE86', [0, 174, 134] or an integer number.
   .setColor(0x00AE86)
 
+  .addField('Test', 'They can also be inline.', false)
+
   //Takes a Date object, defaults to current date. Appears at bottom.
   .setTimestamp()
 
   //the URL for the title and author.
-  .setURL('https://discord.js.org/#/docs/main/indev/class/RichEmbed')
-
-  .addField('Inline Field', 'They can also be inline.', true)
-
+  .setURL('https://discord.js.org/#/docs/main/indev/class/RichEmbed');
 
 
 //do this whenever a message occurs.
@@ -52,9 +51,6 @@ bot.on("message", msg =>
             msg.channel.sendMessage("Test succeeded. Title is " + driver.getTitle().then());
             console.log("Test succeeded.");
         }
-
-        // Exit and stop if no prefix.
-        //if(!msg.content.startsWith(prefix)) return; 
         
         // Exit if a bot.
         if(msg.author.bot) return;   
@@ -75,36 +71,39 @@ bot.on("message", msg =>
 
     //###### PRIMARY FUNCTIONS ######
 
-        //look for PCPP links
+        //look for PCPP list links
         if(msg.content.includes("https://pcpartpicker.com/list"))
         {
-            //test
+
             var orgMessage = msg.content.toString();
+            //find start of URL
             var pos = orgMessage.search('https://pcpartpicker.com/list');
             console.log(pos);
+            //using start of URL, grab the 36 character length of a list URL
             var sliceMessage = orgMessage.substring(pos, (pos + 36));
             console.log(sliceMessage);
+            //navigate to the new URL
             driver.get(sliceMessage);
-            driver.manage().timeouts().implicitlyWait(100000);
-            //endTest
+
+
             //Webdriver goes to work, start with retrive title
             driver.getTitle().then(function(title) 
             {
                 embed.setAuthor(msg.author.username, msg.author.avatarURL);
                 embed.setTitle(sliceMessage);
                 embed.setURL(sliceMessage);
-/*                var cpuElement = driver.findElement(By.linkText('CPU'));
-                cpuElement.getText().then(text => console.log(`Text is ` + text));*/
+                var cpuElement = driver.findElement(By.xpath('/html/body/div[1]/div[1]/div[3]/div/div/div[1]/div/table/tbody/tr[1]/td[3]'));
+                cpuElement.getText().then(text => console.log(`Text is ` + text));
 
-                var bbElement = driver.findElement(By.className("markup_bbcode"));
+/*                var bbElement = driver.findElement(By.className("markup_bbcode"));
                 bbElement.click();
-                //driver.switchTo().activeElement();
+                driver.switchTo().activeElement();
                 var bbTextArea = driver.findElement(By.id("markup_text"));
-                //var text = bbTextArea.getText();
+                var text = bbTextArea.getText();
                 console.log(bbTextArea);
-                //msg.channel.sendMessage(text);
-
-                //send message when done
+                msg.channel.sendMessage(text);
+*/
+                
 
                 msg.channel.sendEmbed(embed, { disableEveryone: true });
                 console.log('Page title is: ' + title);
