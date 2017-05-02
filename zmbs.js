@@ -92,9 +92,12 @@ bot.on("message", msg =>
                 embed.setAuthor(msg.author.username, msg.author.avatarURL);
                 embed.setTitle(sliceMessage);
                 embed.setURL(sliceMessage);
-                var cpuElement = driver.findElement(By.xpath('/html/body/div[1]/div[1]/div[3]/div/div/div[1]/div/table/tbody/tr[1]/td[3]'));
-                cpuElement.getText().then(text => console.log(`Text is ` + text));
-
+                //cycle through xpath
+                for (var i = 1; i < 25; i++)
+                {
+                    var cpuElement = driver.findElement(By.xpath('/html/body/div[1]/div[1]/div[3]/div/div/div[1]/div/table/tbody/tr[' + i + ']/td[3]'));
+                    cpuElement.getText().then(text => console.log(`Text is ` + text));
+                }
 /*                var bbElement = driver.findElement(By.className("markup_bbcode"));
                 bbElement.click();
                 driver.switchTo().activeElement();
